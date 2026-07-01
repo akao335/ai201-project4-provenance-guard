@@ -16,6 +16,7 @@ limiter = Limiter(
 )
 
 @app.route("/submit", methods=["POST"])
+@limiter.limit("10 per minute;100 per day")
 def submit():
     data = request.get_json()
 
