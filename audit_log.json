@@ -25,5 +25,46 @@
     "llm_score": 0.9,
     "status": "classified",
     "timestamp": "2026-07-01T00:25:00.590279+00:00"
+  },
+  {
+    "content_id": "cfa9573f-4c62-47b2-a480-930a007b0e2b",
+    "creator_id": "test-user-3",
+    "attribution": "likely_human",
+    "confidence": 0.036,
+    "llm_score": 0.0,
+    "stylometric_score": 0.089,
+    "status": "classified",
+    "timestamp": "2026-07-01T00:37:14.435355+00:00"
+  },
+  {
+    "content_id": "1a8b6325-1710-402a-a7a7-8c4ae11e1139",
+    "creator_id": "test-user-4",
+    "attribution": "likely_ai",
+    "confidence": 0.69,
+    "llm_score": 0.9,
+    "stylometric_score": 0.375,
+    "label": "This content shows mixed signals \u2014 some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.69.",
+    "status": "under_review",
+    "timestamp": "2026-07-01T00:40:26.108817+00:00",
+    "appeal_reasoning": "I wrote this myself from personal experience. I am a non-native English speaker and my writing style may appear more formal than typical."
+  },
+  {
+    "content_id": "2db00909-12bb-4d1a-b4df-8fcf56fdb5da",
+    "creator_id": "test-user-4",
+    "attribution": "likely_ai",
+    "confidence": 0.69,
+    "llm_score": 0.9,
+    "stylometric_score": 0.375,
+    "label": "This content shows mixed signals \u2014 some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.69.",
+    "status": "classified",
+    "timestamp": "2026-07-01T00:41:46.300237+00:00"
+  },
+  {
+    "content_id": "1a8b6325-1710-402a-a7a7-8c4ae11e1139",
+    "creator_id": "test-user-4",
+    "event": "appeal_submitted",
+    "status": "under_review",
+    "appeal_reasoning": "I wrote this myself from personal experience. I am a non-native English speaker and my writing style may appear more formal than typical.",
+    "timestamp": "2026-07-01T00:41:51.046453+00:00"
   }
 ]
