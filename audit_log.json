@@ -1,0 +1,29 @@
+[
+  {
+    "content_id": "f8d405c5-3d2d-470f-9140-80df3139f039",
+    "creator_id": "test-user-1",
+    "attribution": "likely_human",
+    "confidence": 0.0,
+    "llm_score": 0.0,
+    "status": "classified",
+    "timestamp": "2026-07-01T00:24:04.664605+00:00"
+  },
+  {
+    "content_id": "3270ec71-7852-4ce8-818a-b4627325cbf6",
+    "creator_id": "test-user-1",
+    "attribution": "likely_human",
+    "confidence": 0.0,
+    "llm_score": 0.0,
+    "status": "classified",
+    "timestamp": "2026-07-01T00:24:44.813604+00:00"
+  },
+  {
+    "content_id": "966dd9ad-0fa3-45ba-9d4f-9437dfac5c12",
+    "creator_id": "test-user-2",
+    "attribution": "likely_ai",
+    "confidence": 0.9,
+    "llm_score": 0.9,
+    "status": "classified",
+    "timestamp": "2026-07-01T00:25:00.590279+00:00"
+  }
+]
