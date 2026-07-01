@@ -1,1 +1,194 @@
-# ai201-project4-provenance-guard
+# Provenance Guard
+
+A backend system that classifies submitted text as likely AI-generated, likely human-written, or uncertain — using two independent detection signals combined into a calibrated confidence score, a transparency label shown to users, and an appeals workflow for creators who believe they were misclassified.
+
+## Overview
+
+Provenance Guard exposes three endpoints:
+
+- `POST /submit` — accepts text + creator_id, runs it through two detection signals, returns a confidence score and transparency label
+- `GET /log` — returns structured audit log entries
+- `POST /appeal` — accepts a content_id + creator reasoning, flags the submission for human review
+
+## Setup
+
+```bash
+python -m venv .venv
+source .venv/bin/activate      # Mac/Linux
+.venv\Scripts\activate         # Windows
+
+pip install -r requirements.txt
+```
+## Architecture
+
+POST /submit
+│
+▼
+[Signal 1: LLM judge (Groq)] ──llm_score──┐
+│                                       ▼
+[Signal 2: Stylometric heuristics] ─stylometric_score─► [Combine: 0.6llm + 0.4stylometric → confidence]
+│
+▼
+[Map confidence → label]
+│
+▼
+[Write entry to audit log] ──► [Response: content_id, attribution, confidence, label]
+POST /appeal
+│
+▼
+[Look up content_id] → [Set status = under_review] → [Log appeal + creator_reasoning] → [Response: confirmation, new status]
+
+A submitted text is run through both detection signals independently; their outputs are combined into a single weighted confidence score, which is mapped to one of three transparency labels and recorded in the audit log alongside both individual signal scores before being returned to the user. A creator can appeal a classification by submitting the content_id and their reasoning — the system updates that submission's status to `under_review`, appends the appeal to the audit log next to the original classification, and confirms receipt. No automatic re-scoring occurs on appeal.
+
+## Detection Signals
+
+**Signal 1: LLM-as-judge (Groq, `llama-3.3-70b-versatile`)**
+
+Sends the submitted text to an LLM with a prompt that lists concrete AI-authorship indicators (generic transitions, overly balanced hedging structures, unnaturally uniform rhythm, vague abstract language) and human-authorship indicators (casual tone, contractions, idiosyncratic detail, irregular rhythm). The model reasons briefly, then outputs a JSON score from 0.0 to 1.0.
+
+I chose this as a primary signal because it can pick up on semantic and stylistic patterns that are hard to capture with simple statistics — the kind of "this reads like an AI wrote it" intuition a human reviewer would have. Its blind spot: it can be fooled by AI text that's been lightly edited by a human, and it tends to flag formal, structured human writing (academic writing, non-native English speakers) as AI-generated, since both share a lack of casual markers.
+
+**Signal 2: Stylometric heuristics (rule-based)**
+
+Computes two statistics on the raw text: sentence-length coefficient of variation (uniform sentence lengths score as more "AI-like") and type-token ratio, i.e. vocabulary diversity (lower diversity scores as more "AI-like," recalibrated for short-text inputs since raw TTR ranges assumed for long documents don't hold at ~50 words). The two normalized scores are averaged into a single stylometric score.
+
+I chose this as a second signal because it's a completely independent, non-semantic check — it doesn't "read" the text for meaning the way an LLM does, so it fails differently than Signal 1 does. Its blind spot: a human writer with a deliberately repetitive or minimalist style (poetry, terse writing) will score as "AI-like" on this signal despite being clearly human-authored.
+
+**Combining into confidence:**
+confidence = (0.6 * llm_score) + (0.4 * stylometric_score)
+
+The LLM signal is weighted higher since it captures more semantic nuance, while the stylometric signal acts as an independent check against LLM overconfidence.
+
+## Uncertainty Representation
+
+Confidence is a float from 0.0 (very likely human) to 1.0 (very likely AI) — a weighted heuristic combination, not a statistical probability. Thresholds:
+
+- `confidence >= 0.75` → "Likely AI-generated"
+- `0.40 <= confidence < 0.75` → "Uncertain"
+- `confidence < 0.40` → "Likely human-written"
+
+### Example scores from testing
+
+| Text | llm_score | stylometric_score | confidence |
+|---|---|---|---|
+| Clearly AI-generated paragraph | 0.9 | 0.35 | **0.68** (Uncertain) |
+| Clearly human, casual review | 0.0 | 0.193 | **0.077** (Likely human) |
+| Formal human academic writing (borderline) | 0.8 | 0.511 | **0.684** (Uncertain) |
+| Lightly-edited AI text about remote work (borderline) | 0.2 | 0.313 | **0.245** (Likely human) |
+
+The spread between the clearly-human case (0.077) and the clearly-AI/borderline-formal cases (~0.68) shows the scoring produces meaningful variation rather than clustering around a constant.
+
+## Transparency Label Design
+
+Three label variants, generated by `get_label(confidence)`:
+
+**High-confidence AI** (confidence ≥ 0.75):
+> "This content shows strong patterns consistent with AI-generated text. Confidence: {confidence}. If you believe this is incorrect, you can appeal this classification."
+
+**Uncertain** (0.40 ≤ confidence < 0.75):
+> "This content shows mixed signals — some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: {confidence}."
+
+**High-confidence human** (confidence < 0.40):
+> "This content shows patterns consistent with human-written text. Confidence: {confidence}."
+
+## Appeals Workflow
+
+Any creator can appeal a classification by submitting the `content_id` (returned from `/submit`) and free-text `creator_reasoning` to `POST /appeal`. On receipt, the system:
+
+1. Looks up the original submission by content_id
+2. Updates its status from `classified` to `under_review`
+3. Logs the appeal as a new audit entry, including the creator's reasoning, alongside the original classification
+4. Returns a confirmation with the content_id and new status
+
+No automated re-classification occurs — this flags the submission for human review only.
+
+### Example
+
+```bash
+curl -X POST http://localhost:5000/appeal \
+  -H "Content-Type: application/json" \
+  -d '{"content_id": "e0da14e8-fc16-4d2a-9ae8-b7ba4f308d7f", "creator_reasoning": "I wrote this myself. I use formal academic language because I am writing for a professional audience, not because I used AI."}'
+```
+
+## Rate Limiting
+
+`POST /submit` is limited to **10 requests per minute, 100 per day**, applied via Flask-Limiter with in-memory storage. This reflects realistic usage (a writer submitting their own work occasionally) while blocking abuse (a script flooding the system). Ten per minute comfortably covers a human submitting multiple drafts in a session; a legitimate user would rarely need more.
+
+### Evidence: 12 rapid requests sent, 10 succeed, remainder rejected
+200
+200
+200
+200
+200
+200
+200
+200
+200
+429
+429
+
+## Audit Log
+
+Every submission and appeal writes a structured JSON entry with timestamp, content ID, attribution, confidence, both individual signal scores, and status. Example entries from testing:
+
+```json
+{
+  "content_id": "e0da14e8-fc16-4d2a-9ae8-b7ba4f308d7f",
+  "creator_id": "demo-user-ai",
+  "attribution": "likely_ai",
+  "confidence": 0.68,
+  "llm_score": 0.9,
+  "stylometric_score": 0.35,
+  "label": "This content shows mixed signals — some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.68.",
+  "status": "under_review",
+  "appeal_reasoning": "I wrote this myself. I use formal academic language because I'm writing for a professional audience, not because I used AI.",
+  "timestamp": "2026-07-01T03:43:11.463441+00:00"
+}
+```
+
+```json
+{
+  "content_id": "2af1dcc8-a70c-4676-b98c-588ea75c5632",
+  "creator_id": "demo-user-human",
+  "attribution": "likely_human",
+  "confidence": 0.077,
+  "llm_score": 0.0,
+  "stylometric_score": 0.193,
+  "label": "This content shows patterns consistent with human-written text. Confidence: 0.077.",
+  "status": "classified",
+  "timestamp": "2026-07-01T03:43:31.188327+00:00"
+}
+```
+
+```json
+{
+  "content_id": "e0da14e8-fc16-4d2a-9ae8-b7ba4f308d7f",
+  "creator_id": "demo-user-ai",
+  "event": "appeal_submitted",
+  "status": "under_review",
+  "appeal_reasoning": "I wrote this myself. I use formal academic language because I'm writing for a professional audience, not because I used AI.",
+  "timestamp": "2026-07-01T03:45:59.039371+00:00"
+}
+```
+
+## Known Limitations
+
+**Formal human writing is nearly indistinguishable from AI-generated text in this system.** A formal academic passage about monetary policy scored 0.684 confidence — almost identical to a deliberately AI-generated paragraph's 0.68. This isn't incidental noise: both signals independently push formal writing toward "AI-like." The LLM judge flags a lack of casual markers (contractions, idiosyncratic phrasing) as an AI indicator, and the stylometric signal flags formal writing's naturally uniform sentence structure the same way. Any user who writes formally — including non-native English speakers, academics, or professional writers — is structurally likely to be misclassified or land in "Uncertain" by this system.
+
+**The stylometric signal is sensitive to text length and needed manual recalibration.** Type-token ratio was originally normalized assuming a range (0.4–0.8) suited to longer documents; on the ~50-word test inputs used here, real TTR values clustered at 0.86–0.90 regardless of authorship, making the metric useless until the normalization range was recalibrated to 0.75–0.95. This means the current calibration is tuned specifically for short-to-medium submissions (tested at 40–60 words) and would likely need re-tuning for very short (a single sentence) or very long (multi-paragraph) submissions, where sentence-count-dependent variance and TTR behave differently.
+
+## Spec Reflection
+
+Writing planning.md before any code forced concrete decisions — especially defining the exact label wording and confidence thresholds up front — which meant the label-generation function in Milestone 5 was a direct, near-mechanical implementation of already-settled decisions rather than something requiring new design choices mid-build.
+
+Where implementation diverged from the spec: the stylometric signal's type-token ratio normalization range wasn't specified with real numbers in planning.md (the spec named the metric but not its calibration). Testing against real short-text inputs revealed the assumed range didn't match observed data, requiring a recalibration not anticipated in the original spec. This is a case where the spec correctly named *what* to measure but underspecified *how to normalize it*, which only became visible once tested against real text.
+
+## AI Usage
+
+**Instance 1:** Directed an AI tool to generate the initial `get_llm_score` function and Flask `/submit` route skeleton from the detection signals section of planning.md. The first version used the small `llama-3.1-8b-instant` model and a prompt asking for a direct probability judgment; this consistently returned 0.0 regardless of input. I revised the prompt to list concrete AI/human indicators and require brief reasoning before the JSON output, and switched to `llama-3.3-70b-versatile`, which fixed the issue and produced well-differentiated scores.
+
+**Instance 2:** Directed an AI tool to generate the stylometric signal function (sentence-length variance + type-token ratio) from the spec description. The generated normalization ranges for type-token ratio were tuned for long-document text and produced a flat 0.0 score across all test inputs when applied to short (~50-word) submissions. I diagnosed this by adding debug prints of intermediate values, discovered real TTR values clustered at 0.86–0.90 for short text, and manually recalibrated the normalization range to 0.75–0.95 to restore meaningful score variation.
+
+## Demo Walkthrough
+
+https://www.loom.com/share/76e776acd4f74e3aa5001d144b48071a

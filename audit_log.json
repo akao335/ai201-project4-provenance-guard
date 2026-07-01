@@ -1,74 +1,68 @@
 [
   {
-    "content_id": "f8d405c5-3d2d-470f-9140-80df3139f039",
-    "creator_id": "test-user-1",
-    "attribution": "likely_human",
-    "confidence": 0.0,
-    "llm_score": 0.0,
-    "status": "classified",
-    "timestamp": "2026-07-01T00:24:04.664605+00:00"
-  },
-  {
-    "content_id": "3270ec71-7852-4ce8-818a-b4627325cbf6",
-    "creator_id": "test-user-1",
-    "attribution": "likely_human",
-    "confidence": 0.0,
-    "llm_score": 0.0,
-    "status": "classified",
-    "timestamp": "2026-07-01T00:24:44.813604+00:00"
-  },
-  {
-    "content_id": "966dd9ad-0fa3-45ba-9d4f-9437dfac5c12",
-    "creator_id": "test-user-2",
+    "content_id": "e0da14e8-fc16-4d2a-9ae8-b7ba4f308d7f",
+    "creator_id": "demo-user-ai",
     "attribution": "likely_ai",
-    "confidence": 0.9,
+    "confidence": 0.68,
     "llm_score": 0.9,
-    "status": "classified",
-    "timestamp": "2026-07-01T00:25:00.590279+00:00"
-  },
-  {
-    "content_id": "cfa9573f-4c62-47b2-a480-930a007b0e2b",
-    "creator_id": "test-user-3",
-    "attribution": "likely_human",
-    "confidence": 0.036,
-    "llm_score": 0.0,
-    "stylometric_score": 0.089,
-    "status": "classified",
-    "timestamp": "2026-07-01T00:37:14.435355+00:00"
-  },
-  {
-    "content_id": "1a8b6325-1710-402a-a7a7-8c4ae11e1139",
-    "creator_id": "test-user-4",
-    "attribution": "likely_ai",
-    "confidence": 0.69,
-    "llm_score": 0.9,
-    "stylometric_score": 0.375,
-    "label": "This content shows mixed signals \u2014 some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.69.",
+    "stylometric_score": 0.35,
+    "label": "This content shows mixed signals \u2014 some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.68.",
     "status": "under_review",
-    "timestamp": "2026-07-01T00:40:26.108817+00:00",
-    "appeal_reasoning": "I wrote this myself from personal experience. I am a non-native English speaker and my writing style may appear more formal than typical."
+    "timestamp": "2026-07-01T03:43:11.463441+00:00",
+    "appeal_reasoning": "I wrote this myself. I use formal academic language because I'm writing for a professional audience, not because I used AI."
   },
   {
-    "content_id": "2db00909-12bb-4d1a-b4df-8fcf56fdb5da",
-    "creator_id": "test-user-4",
-    "attribution": "likely_ai",
-    "confidence": 0.69,
-    "llm_score": 0.9,
-    "stylometric_score": 0.375,
-    "label": "This content shows mixed signals \u2014 some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.69.",
+    "content_id": "2af1dcc8-a70c-4676-b98c-588ea75c5632",
+    "creator_id": "demo-user-human",
+    "attribution": "likely_human",
+    "confidence": 0.077,
+    "llm_score": 0.0,
+    "stylometric_score": 0.193,
+    "label": "This content shows patterns consistent with human-written text. Confidence: 0.077.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:41:46.300237+00:00"
+    "timestamp": "2026-07-01T03:43:31.188327+00:00"
   },
   {
-    "content_id": "1a8b6325-1710-402a-a7a7-8c4ae11e1139",
-    "creator_id": "test-user-4",
+    "content_id": "e0da14e8-fc16-4d2a-9ae8-b7ba4f308d7f",
+    "creator_id": "demo-user-ai",
     "event": "appeal_submitted",
     "status": "under_review",
-    "appeal_reasoning": "I wrote this myself from personal experience. I am a non-native English speaker and my writing style may appear more formal than typical.",
-    "timestamp": "2026-07-01T00:41:51.046453+00:00"
+    "appeal_reasoning": "I wrote this myself. I use formal academic language because I'm writing for a professional audience, not because I used AI.",
+    "timestamp": "2026-07-01T03:45:59.039371+00:00"
   },
   {
-    "content_id": "fcdd54e3-dc16-4489-b696-9113d30f1ddf",
+    "content_id": "9450485b-c383-495d-8841-d86d2e86679d",
+    "creator_id": "demo-user-ai",
+    "attribution": "likely_ai",
+    "confidence": 0.68,
+    "llm_score": 0.9,
+    "stylometric_score": 0.35,
+    "label": "This content shows mixed signals \u2014 some patterns common in both AI-generated and human-written text. We can't confidently classify this submission. Confidence: 0.68.",
+    "status": "under_review",
+    "timestamp": "2026-07-01T04:05:10.985443+00:00",
+    "appeal_reasoning": "I wrote this myself. I use formal academic language because I'm writing for a professional audience, not because I used AI."
+  },
+  {
+    "content_id": "b8e6a5af-974f-4343-b734-6942328656cd",
+    "creator_id": "demo-user-human",
+    "attribution": "likely_human",
+    "confidence": 0.077,
+    "llm_score": 0.0,
+    "stylometric_score": 0.193,
+    "label": "This content shows patterns consistent with human-written text. Confidence: 0.077.",
+    "status": "classified",
+    "timestamp": "2026-07-01T04:06:14.284259+00:00"
+  },
+  {
+    "content_id": "9450485b-c383-495d-8841-d86d2e86679d",
+    "creator_id": "demo-user-ai",
+    "event": "appeal_submitted",
+    "status": "under_review",
+    "appeal_reasoning": "I wrote this myself. I use formal academic language because I'm writing for a professional audience, not because I used AI.",
+    "timestamp": "2026-07-01T04:07:20.583071+00:00"
+  },
+  {
+    "content_id": "2b98ec4e-d010-46e4-8d7b-fa8ac9b58601",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -76,10 +70,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:01.131073+00:00"
+    "timestamp": "2026-07-01T04:07:52.691223+00:00"
   },
   {
-    "content_id": "1aaa005b-604b-4bff-b3b4-f2670d01ffe0",
+    "content_id": "3e6b122a-4f17-494d-9067-71a62350e1ee",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -87,10 +81,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:20.557092+00:00"
+    "timestamp": "2026-07-01T04:08:00.372499+00:00"
   },
   {
-    "content_id": "26ec5661-ae40-4e75-8ae7-6b5e7fac65bf",
+    "content_id": "9162a96f-9d3b-451c-b6b2-b58365e67352",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -98,10 +92,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:28.361829+00:00"
+    "timestamp": "2026-07-01T04:08:00.826175+00:00"
   },
   {
-    "content_id": "5a53bd90-7c05-48e6-9884-b2dda83b74c1",
+    "content_id": "3f61fd7c-a136-4860-a398-e1dfcc5cd139",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -109,10 +103,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:29.184552+00:00"
+    "timestamp": "2026-07-01T04:08:01.318464+00:00"
   },
   {
-    "content_id": "bbe9db2a-1ee3-4236-80d9-5b152184146c",
+    "content_id": "c9ccc874-2370-40d7-9dcc-ddb76952cea0",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -120,10 +114,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:29.780658+00:00"
+    "timestamp": "2026-07-01T04:08:02.174580+00:00"
   },
   {
-    "content_id": "0c5941dc-1159-4e4c-b354-dbf84f611b06",
+    "content_id": "f0f9b079-86b9-4ca7-8533-a3fd2a97ac22",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -131,10 +125,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:30.539847+00:00"
+    "timestamp": "2026-07-01T04:08:02.606659+00:00"
   },
   {
-    "content_id": "54e94914-2245-4ea2-b2eb-cc7dd61c9e63",
+    "content_id": "15024611-9a32-4b75-a722-cdffd64614dc",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -142,10 +136,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:31.150039+00:00"
+    "timestamp": "2026-07-01T04:08:03.304391+00:00"
   },
   {
-    "content_id": "be60f928-ea0d-4904-9215-5b9494700d0a",
+    "content_id": "dfab016e-e15f-4cb8-bb53-84e259819e6c",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -153,10 +147,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:31.872267+00:00"
+    "timestamp": "2026-07-01T04:08:03.874686+00:00"
   },
   {
-    "content_id": "0dabac23-ab31-4497-ba39-6285d8f43f69",
+    "content_id": "9bfbe4bd-04e7-4b2c-bbf0-fab6f5ea476e",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -164,10 +158,10 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:32.435448+00:00"
+    "timestamp": "2026-07-01T04:08:04.818718+00:00"
   },
   {
-    "content_id": "8d55199a-4524-4e6c-9b45-c6a017c75cbe",
+    "content_id": "8ac75c15-c489-488d-a2cf-1c50eecf4bd3",
     "creator_id": "ratelimit-test",
     "attribution": "likely_human",
     "confidence": 0.2,
@@ -175,6 +169,6 @@
     "stylometric_score": 0.5,
     "label": "This content shows patterns consistent with human-written text. Confidence: 0.2.",
     "status": "classified",
-    "timestamp": "2026-07-01T00:44:33.096943+00:00"
+    "timestamp": "2026-07-01T04:08:05.243741+00:00"
   }
 ]
